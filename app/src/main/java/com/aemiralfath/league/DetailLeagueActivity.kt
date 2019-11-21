@@ -61,7 +61,9 @@ class DetailLeagueActivity : AppCompatActivity() {
 
         leagueNameTextView.text = dataItem.name
         leagueDescriptionTextView.text = dataItem.description
-        dataItem.image?.let { Picasso.get().load(it).fit().into(leagueImageView) }
+        dataItem.image?.let {
+            Picasso.get().load(it).fit().placeholder(it).error(it).into(leagueImageView)
+        }
 
     }
 }

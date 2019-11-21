@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
                 lparams(width = matchParent, height = matchParent)
                 layoutManager = GridLayoutManager(context, 2)
                 adapter = LeagueAdapter(items) {
-                    //                    toast("${it.name}")
                     startActivity<DetailLeagueActivity>("EXTRA_ITEM" to it)
                 }
             }

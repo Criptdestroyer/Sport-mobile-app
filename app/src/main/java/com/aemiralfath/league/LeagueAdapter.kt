@@ -38,7 +38,7 @@ class LeagueAdapter(private val items: List<Item>, private val listener: (Item) 
 
         fun bindItem(items: Item, listener: (Item) -> Unit) {
             name.text = items.name
-            items.image?.let { Picasso.get().load(it).fit().into(image) }
+            items.image?.let { Picasso.get().load(it).fit().placeholder(it).error(it).into(image) }
             itemView.setOnClickListener {
                 listener(items)
             }
