@@ -30,17 +30,16 @@ class LeagueAdapter(private val items: List<Item>, private val listener: (Item) 
         holder.bindItem(items[position], listener)
     }
 
-    class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
+        LayoutContainer {
 
         private val name = containerView.find<TextView>(R.id.name_league)
-        private val description = containerView.find<TextView>(R.id.description_league)
         private val image = containerView.find<ImageView>(R.id.image_league)
 
         fun bindItem(items: Item, listener: (Item) -> Unit) {
             name.text = items.name
-            description.text = items.description
             items.image?.let { Picasso.get().load(it).fit().into(image) }
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 listener(items)
             }
         }
@@ -48,42 +47,31 @@ class LeagueAdapter(private val items: List<Item>, private val listener: (Item) 
 
     class LeagueAdapterUI : AnkoComponent<ViewGroup> {
         override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
-            verticalLayout{
+            verticalLayout {
                 lparams(width = matchParent, height = wrapContent)
                 padding = dip(16)
-                orientation = LinearLayout.HORIZONTAL
+                orientation = LinearLayout.VERTICAL
 
                 imageView {
                     id = R.id.image_league
                 }.lparams {
-                    height = dip(100)
-                    width = dip(100)
+                    height = dip(150)
+                    width = matchParent
+                    bottomMargin = dip(16)
                 }
 
-                verticalLayout {
-                    lparams(width = wrapContent, height = wrapContent)
-                    orientation = LinearLayout.VERTICAL
-                    leftPadding = dip(8)
 
-                    textView {
-                        id = R.id.name_league
-                        textSize = 16f
-                    }.lparams {
-                        height = wrapContent
-                        width = wrapContent
-                    }
-
-                    textView {
-                        id = R.id.description_league
-                        textSize = 14f
-                        maxLines = 5
-                    }.lparams {
-                        height = wrapContent
-                        width = wrapContent
-                        bottom = R.id.name_league
-                    }
-
+                textView {
+                    id = R.id.name_league
+                    textSize = 14f
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                }.lparams {
+                    height = wrapContent
+                    width = matchParent
+                    bottom = R.id.image_league
                 }
+
+
             }
 
         }

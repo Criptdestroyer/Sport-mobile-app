@@ -2,7 +2,7 @@ package com.aemiralfath.league
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
@@ -17,9 +17,10 @@ class MainActivity : AppCompatActivity() {
         verticalLayout {
             recyclerView {
                 lparams(width = matchParent, height = matchParent)
-                layoutManager = LinearLayoutManager(context)
-                adapter = LeagueAdapter(items){
-
+                layoutManager = GridLayoutManager(context, 2)
+                adapter = LeagueAdapter(items) {
+                    //                    toast("${it.name}")
+                    startActivity<DetailLeagueActivity>("EXTRA_ITEM" to it)
                 }
             }
         }
