@@ -1,6 +1,5 @@
 package com.aemiralfath.league
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.*
 
-class LeagueAdapter(private val context: Context, private val items: List<Item>) :
+class LeagueAdapter(private val items: List<Item>) :
         RecyclerView.Adapter<LeagueAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -46,14 +45,14 @@ class LeagueAdapter(private val context: Context, private val items: List<Item>)
                 imageView{
                     id = R.id.image_league
                 }.lparams{
-                    height = dip(50)
-                    width = dip(50)
+                    height = dip(100)
+                    width = dip(100)
                 }
 
                 verticalLayout{
                     lparams(width = wrapContent, height = wrapContent)
                     orientation = LinearLayout.VERTICAL
-                    padding = dip(8)
+                    leftPadding = dip(8)
 
                     textView{
                         id = R.id.name_league
@@ -61,16 +60,15 @@ class LeagueAdapter(private val context: Context, private val items: List<Item>)
                     }.lparams{
                         height = wrapContent
                         width = wrapContent
-                        margin = dip(10)
                     }
 
                     textView{
                         id = R.id.description_league
                         textSize = 14f
+                        maxLines = 5
                     }.lparams{
                         height = wrapContent
                         width = wrapContent
-                        margin = dip(10)
                         bottom = R.id.name_league
                     }
 
