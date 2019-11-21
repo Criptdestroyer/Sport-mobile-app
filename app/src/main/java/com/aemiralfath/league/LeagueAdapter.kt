@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import kotlinx.android.extensions.LayoutContainer
 import org.jetbrains.anko.*
 
 class LeagueAdapter(private val items: List<Item>, private val listener: (Item) -> Unit) :
@@ -29,11 +30,11 @@ class LeagueAdapter(private val items: List<Item>, private val listener: (Item) 
         holder.bindItem(items[position], listener)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        private val name = view.find<TextView>(R.id.name_league)
-        private val description = view.find<TextView>(R.id.description_league)
-        private val image = view.find<ImageView>(R.id.image_league)
+        private val name = containerView.find<TextView>(R.id.name_league)
+        private val description = containerView.find<TextView>(R.id.description_league)
+        private val image = containerView.find<ImageView>(R.id.image_league)
 
         fun bindItem(items: Item, listener: (Item) -> Unit) {
             name.text = items.name
