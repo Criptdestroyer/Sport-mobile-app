@@ -14,23 +14,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initData()
 
-        verticalLayout{
-            recyclerView{
-                lparams(width= matchParent,height = matchParent)
+        verticalLayout {
+            recyclerView {
+                lparams(width = matchParent, height = matchParent)
                 layoutManager = LinearLayoutManager(context)
-                adapter = LeagueAdapter(items)
+                adapter = LeagueAdapter(items){
+
+                }
             }
         }
     }
 
-    private fun initData(){
+    private fun initData() {
         val id = resources.getStringArray(R.array.league_id)
         val name = resources.getStringArray(R.array.league_name)
         val description = resources.getStringArray(R.array.league_description)
         val image = resources.obtainTypedArray(R.array.league_image)
         items.clear()
 
-        for(i in id.indices){
+        for (i in id.indices) {
             items.add(Item(id[i], name[i], description[i], image.getResourceId(i, 0)))
         }
         image.recycle()
