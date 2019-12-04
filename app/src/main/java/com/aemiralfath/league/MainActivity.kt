@@ -28,12 +28,12 @@ class MainActivity : AppCompatActivity() {
     private fun initData() {
         val id = resources.getStringArray(R.array.league_id)
         val name = resources.getStringArray(R.array.league_name)
-        val description = resources.getStringArray(R.array.league_description)
+//        val description = resources.getStringArray(R.array.league_description)
         val image = resources.obtainTypedArray(R.array.league_image)
         items.clear()
 
         for (i in id.indices) {
-            items.add(Item(id[i], name[i], description[i], image.getResourceId(i, 0)))
+//            items.add(Item(id[i], name[i], description[i], image.getResourceId(i, 0)))
         }
         image.recycle()
     }
