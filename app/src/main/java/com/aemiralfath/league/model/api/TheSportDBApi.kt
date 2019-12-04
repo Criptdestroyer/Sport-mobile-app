@@ -1,9 +1,10 @@
-package com.aemiralfath.league
+package com.aemiralfath.league.model.api
 
 import android.net.Uri
+import com.aemiralfath.league.BuildConfig
 
 object TheSportDBApi {
-    fun getDetailLeague(idLeague: String?):String{
+    fun getDetailLeague(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -15,7 +16,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getNextMatch(idLeague: String?):String{
+    fun getNextMatch(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -27,7 +28,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getPreviousMatch(idLeague: String?):String{
+    fun getPreviousMatch(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -39,7 +40,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getDetailMatch(idEvent: String?):String{
+    fun getDetailMatch(idEvent: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -51,7 +52,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun searchMatch(query: String?): String{
+    fun searchMatch(query: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")

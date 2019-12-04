@@ -1,4 +1,4 @@
-package com.aemiralfath.league
+package com.aemiralfath.league.view
 
 import android.view.View
 import android.view.ViewGroup
@@ -6,17 +6,19 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.aemiralfath.league.R
+import com.aemiralfath.league.model.item.LeagueItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import org.jetbrains.anko.*
 
-class LeagueAdapter(private val items: List<Item>, private val listener: (Item) -> Unit) :
+class LeagueAdapter(private val items: List<LeagueItem>, private val listener: (LeagueItem) -> Unit) :
     RecyclerView.Adapter<LeagueAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
             LeagueAdapterUI().createView(
-                AnkoContext.Companion.create(
+                AnkoContext.create(
                     parent.context,
                     parent
                 )
@@ -36,7 +38,7 @@ class LeagueAdapter(private val items: List<Item>, private val listener: (Item) 
         private val name = containerView.find<TextView>(R.id.name_league)
         private val image = containerView.find<ImageView>(R.id.image_league)
 
-        fun bindItem(items: Item, listener: (Item) -> Unit) {
+        fun bindItem(items: LeagueItem, listener: (LeagueItem) -> Unit) {
             name.text = items.name
             items.image?.let { Picasso.get().load(it).fit().placeholder(it).error(it).into(image) }
             itemView.setOnClickListener {

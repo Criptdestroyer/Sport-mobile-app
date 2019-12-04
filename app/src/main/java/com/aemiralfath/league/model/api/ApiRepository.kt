@@ -1,4 +1,4 @@
-package com.aemiralfath.league
+package com.aemiralfath.league.model.api
 
 import java.net.URL
 
