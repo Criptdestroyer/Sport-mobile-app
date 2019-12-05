@@ -1,29 +1,30 @@
 package com.aemiralfath.league.presenter
 
 import com.aemiralfath.league.model.api.ApiRepository
-import com.aemiralfath.league.model.api.DetailLeagueResponse
 import com.aemiralfath.league.model.api.TheSportDBApi
-import com.aemiralfath.league.view.DetailView
+import com.aemiralfath.league.model.response.SearchResponse
+import com.aemiralfath.league.view.view.SearchMatchView
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class DetailPresenter(
-    private val view: DetailView,
+class SearchPresenter(
+    private val view: SearchMatchView,
     private val apiRepository: ApiRepository,
     private val gson: Gson
 ) {
 
-    fun getLeagueDetail(idLeague: String?) {
+    fun searchMatch(query: String?) {
         view.showLoading()
         doAsync {
-            val data = gson.fromJson(
-                apiRepository.doRequest(TheSportDBApi.getDetailLeague(idLeague)),
-                DetailLeagueResponse::class.java
+            val dataMatch = gson.fromJson(
+                apiRepository.doRequest(TheSportDBApi.searchMatch(query)),
+                SearchResponse::class.java
             )
+
             uiThread {
                 view.hideLoading()
-                view.showDetailLeague(data)
+                view.showDetailMatch(dataMatch)
             }
         }
     }

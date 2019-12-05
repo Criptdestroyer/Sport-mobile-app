@@ -1,4 +1,4 @@
-package com.aemiralfath.league.view
+package com.aemiralfath.league.view.adapter
 
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,10 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import org.jetbrains.anko.*
 
-class LeagueAdapter(private val items: List<LeagueItem>, private val listener: (LeagueItem) -> Unit) :
+class LeagueAdapter(
+    private val items: List<LeagueItem>,
+    private val listener: (LeagueItem) -> Unit
+) :
     RecyclerView.Adapter<LeagueAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
