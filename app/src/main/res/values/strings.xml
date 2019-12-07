@@ -58,5 +58,6 @@
     <string name="yellow">Yellow Card</string>
     <string name="red">Red Card</string>
     <string name="shot">Shot</string>
+    <string name="favorite">Favorite</string>
 
 </resources>
