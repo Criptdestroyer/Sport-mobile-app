@@ -41,9 +41,6 @@
     </array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="previous_match">Previous Match</string>
-    <string name="next_match">Next Match</string>
     <string name="league_logo">logo</string>
     <string name="homeimage">HomeImage</string>
     <string name="away_image">Away Image</string>

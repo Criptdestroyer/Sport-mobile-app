@@ -16,7 +16,7 @@ import com.aemiralfath.league.view.adapter.MatchAdapter
 /**
  * A simple [Fragment] subclass.
  */
-class MatchFragment(private val mData: ArrayList<MatchItem>?) : Fragment() {
+class MatchFragment(private val mData: List<MatchItem>?) : Fragment() {
     private lateinit var matchAdapter: MatchAdapter
 
     override fun onCreateView(

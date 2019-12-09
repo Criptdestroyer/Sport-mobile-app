@@ -4,39 +4,40 @@ import com.aemiralfath.league.model.api.ApiRepository
 import com.aemiralfath.league.model.response.DetailLeagueResponse
 import com.aemiralfath.league.model.response.MatchResponse
 import com.aemiralfath.league.model.api.TheSportDBApi
+import com.aemiralfath.league.model.api.CoroutineContextProvider
 import com.aemiralfath.league.view.view.DetailLeagueView
 import com.google.gson.Gson
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LeaguePresenter(
     private val view: DetailLeagueView,
     private val apiRepository: ApiRepository,
-    private val gson: Gson
+    private val gson: Gson,
+    private val context: CoroutineContextProvider = CoroutineContextProvider()
 ) {
 
     fun getLeagueDetail(idLeague: String?) {
         view.showLoading()
-        doAsync {
+
+        GlobalScope.launch(context.main) {
             val dataLeague = gson.fromJson(
-                apiRepository.doRequest(TheSportDBApi.getDetailLeague(idLeague)),
+                apiRepository.doRequestAsync(TheSportDBApi.getDetailLeague(idLeague)).await(),
                 DetailLeagueResponse::class.java
             )
 
             val dataPrevious = gson.fromJson(
-                apiRepository.doRequest(TheSportDBApi.getPreviousMatch(idLeague)),
+                apiRepository.doRequestAsync(TheSportDBApi.getPreviousMatch(idLeague)).await(),
                 MatchResponse::class.java
             )
 
             val dataNext = gson.fromJson(
-                apiRepository.doRequest(TheSportDBApi.getNextMatch(idLeague)),
+                apiRepository.doRequestAsync(TheSportDBApi.getNextMatch(idLeague)).await(),
                 MatchResponse::class.java
             )
 
-            uiThread {
-                view.hideLoading()
-                view.showDetailLeague(dataLeague, dataPrevious, dataNext)
-            }
+            view.showDetailLeague(dataLeague, dataPrevious, dataNext)
+            view.hideLoading()
         }
     }
 }

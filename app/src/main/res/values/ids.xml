@@ -4,9 +4,6 @@
     <item name="name_league" type="id" />
     <item name="description_league" type="id" />
     <item name="image_detail_league" type="id" />
-    <item name="name_detail_league" type="id" />
-    <item name="viewpager" type="id" />
-    <item name="sv_movie" type="id" />
     <item name="sv_match" type="id" />
     <item name="date_time" type="id" />
 </resources>

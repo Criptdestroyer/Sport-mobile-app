@@ -6,5 +6,9 @@ import com.aemiralfath.league.model.response.TeamResponse
 interface DetailMatchView {
     fun showLoading()
     fun hideLoading()
-    fun showDetailMatch(dataMatch: MatchResponse, dataTeamHome: TeamResponse, dataTeamAway: TeamResponse)
+    fun showDetailMatch(
+        dataMatch: MatchResponse,
+        dataTeamHome: TeamResponse,
+        dataTeamAway: TeamResponse
+    )
 }

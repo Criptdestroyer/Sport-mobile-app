@@ -14,11 +14,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MatchAdapter : RecyclerView.Adapter<MatchAdapter.DataViewHolder>() {
-    private val mData = ArrayList<MatchItem>()
+    private lateinit var mData: List<MatchItem>
 
-    fun setData(items: ArrayList<MatchItem>) {
-        mData.clear()
-        mData.addAll(items)
+    fun setData(items: List<MatchItem>) {
+        mData = items
         notifyDataSetChanged()
     }
 

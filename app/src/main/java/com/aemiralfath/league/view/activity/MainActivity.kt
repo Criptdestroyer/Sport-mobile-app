@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity(), SearchMatchView {
     private lateinit var mSearchView: SearchView
     private lateinit var mProgressBar: ProgressBar
     private lateinit var mRecyclerView: RecyclerView
+    private var menuItem: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,14 +113,6 @@ class MainActivity : AppCompatActivity(), SearchMatchView {
         image.recycle()
     }
 
-    override fun showLoading() {
-        mProgressBar.visible()
-    }
-
-    override fun hideLoading() {
-        mProgressBar.invisible()
-    }
-
     override fun showDetailMatch(dataMatch: SearchResponse) {
         if (!dataMatch.event.isNullOrEmpty()) {
             mRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
@@ -132,5 +127,28 @@ class MainActivity : AppCompatActivity(), SearchMatchView {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        menuItem = menu
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.favorite -> {
+                startActivity<FavoriteActivity>()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun showLoading() {
+        mProgressBar.visible()
+    }
+
+    override fun hideLoading() {
+        mProgressBar.invisible()
+    }
 
 }

@@ -1,21 +1,32 @@
 package com.aemiralfath.league.view.activity
 
 import android.annotation.SuppressLint
+import android.database.sqlite.SQLiteConstraintException
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.aemiralfath.league.R
 import com.aemiralfath.league.invisible
 import com.aemiralfath.league.model.response.MatchResponse
 import com.aemiralfath.league.model.api.ApiRepository
+import com.aemiralfath.league.model.db.Favorite
+import com.aemiralfath.league.model.db.database
 import com.aemiralfath.league.model.response.TeamResponse
 import com.aemiralfath.league.presenter.MatchPresenter
 import com.aemiralfath.league.view.view.DetailMatchView
 import com.aemiralfath.league.visible
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.delete
+import org.jetbrains.anko.db.select
+import org.jetbrains.anko.design.snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,11 +57,16 @@ class DetailMatchActivity : AppCompatActivity(),
     private lateinit var textViewStadium: TextView
     private lateinit var progressBar: ProgressBar
 
+    private lateinit var item: List<Any?>
+    private var idMatch: String? = null
+    private var menuItem: Menu? = null
+    private var isFavorite: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_match)
 
-        val idMatch = intent.getStringExtra("EXTRA_ID")
+        idMatch = intent.getStringExtra("EXTRA_ID")
 
         supportActionBar?.title = intent.getStringExtra("EXTRA_NAME")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -79,24 +95,25 @@ class DetailMatchActivity : AppCompatActivity(),
         textViewStadium = findViewById(R.id.tr_stadium)
         progressBar = findViewById(R.id.progressBarMatch)
 
+        favoriteState()
         val request = ApiRepository()
         val gson = Gson()
         presenter = MatchPresenter(this, request, gson)
-        println(idMatch)
         presenter.getMatchDetail(idMatch)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
+    @SuppressLint("SimpleDateFormat")
+    fun toGMTFormat(date: String?, time: String?): String? {
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        formatter.timeZone = TimeZone.getTimeZone("WIB")
 
-    override fun showLoading() {
-        progressBar.visible()
-    }
+        val dateTime: String = when {
+            date == null -> "0000-00-00 $time"
+            time == null -> "$date 00:00:00"
+            else -> "$date $time"
+        }
 
-    override fun hideLoading() {
-        progressBar.invisible()
+        return "${formatter.parse(dateTime)}"
     }
 
     @SuppressLint("SetTextI18n")
@@ -136,20 +153,94 @@ class DetailMatchActivity : AppCompatActivity(),
         dataTeamAway.teams[0].strTeamBadge?.let {
             Picasso.get().load(it).fit().into(imageViewAway)
         }
+
+        item = listOf(
+            dataMatch.events[0].eventId,
+            dataMatch.events[0].eventName,
+            toGMTFormat(dataMatch.events[0].eventDate, dataMatch.events[0].eventTime)
+        )
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun toGMTFormat(date: String?, time: String?): String? {
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        formatter.timeZone = TimeZone.getTimeZone("WIB")
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_menu, menu)
+        menuItem = menu
+        setFavorite()
+        return true
+    }
 
-        val dateTime: String = when {
-            date == null -> "0000-00-00 $time"
-            time == null -> "$date 00:00:00"
-            else -> "$date $time"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_to_favorite -> {
+                if (isFavorite) removeFromFavorite() else addToFavorite()
+
+                isFavorite = !isFavorite
+                setFavorite()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
+    }
 
-        return "${formatter.parse(dateTime)}"
+    private fun setFavorite() {
+        if (isFavorite)
+            menuItem?.getItem(0)?.icon =
+                ContextCompat.getDrawable(this, R.drawable.ic_added_to_favorites)
+        else
+            menuItem?.getItem(0)?.icon =
+                ContextCompat.getDrawable(this, R.drawable.ic_add_to_favorites)
+    }
+
+    private fun favoriteState() {
+        database.use {
+            val result = select(Favorite.TABLE_FAVORITE)
+                .whereArgs(
+                    "(EVENT_ID = {id})",
+                    "id" to idMatch!!
+                )
+            val favorite = result.parseList(classParser<Favorite>())
+            if (favorite.isNotEmpty()) isFavorite = true
+        }
+    }
+
+    private fun addToFavorite() {
+        try {
+            database.use {
+                insert(
+                    Favorite.TABLE_FAVORITE,
+                    Favorite.EVENT_ID to item[0],
+                    Favorite.EVENT_NAME to item[1],
+                    Favorite.EVENT_DATE to item[2]
+                )
+            }
+            progressBar.snackbar("Added to Favorite")
+        } catch (e: SQLiteConstraintException) {
+            progressBar.snackbar(e.localizedMessage!!).show()
+        }
+    }
+
+    private fun removeFromFavorite() {
+        try {
+            database.use {
+                delete(Favorite.TABLE_FAVORITE, "(EVENT_ID = {id})", "id" to idMatch!!)
+            }
+            progressBar.snackbar("Remove from Favorite")
+        } catch (e: SQLiteConstraintException) {
+            progressBar.snackbar(e.localizedMessage!!)
+        }
+    }
+
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun showLoading() {
+        progressBar.visible()
+    }
+
+    override fun hideLoading() {
+        progressBar.invisible()
     }
 }
 
